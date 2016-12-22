@@ -68,6 +68,9 @@ vAxis: {
       function drawChart() {
 
         var public_key = 'KydOPJNdDNhzKlJjqm0KFPMGEVN';
+        
+        var rawRange=4096;
+        var logRange=3.3;
 
         // JSONP request
         var jsonData = $.ajax({
@@ -79,19 +82,20 @@ vAxis: {
           var data = new google.visualization.DataTable();
 
           data.addColumn('datetime', 'Time');
-          data.addColumn('number', 'light');
+          data.addColumn('number', 'Light Level (lux)');
 
           $.each(results, function (i, row) {
             data.addRow([
               (new Date(row.timestamp)),
-              parseFloat(row.light/4096.)
+              //parseFloat(row.light/4096.)
+                Math.pow(10,row.light * logRange / rawRange)
             ]);
           });
 
           var chart = new google.visualization.LineChart($('#light').get(0));
 
              var options = {
-            title: 'Polybot 1: Light',
+            title: 'Polybot 1: Light Level',
           series: {
             0: { color: 'blue' },
           }
